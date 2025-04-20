@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spam Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <h1>Email/SMS Spam Classifier</h1>
+      <p>Enter your message below and click "Predict" to check whether it's spam or not.</p>
+      <textarea id="message" placeholder="Type your message here..."></textarea>
+      <button onclick="predictSpam()">Predict</button>
+      <div id="result" class="result"></div>
+    </div>
+  
+    <script>
+        function predictSpam() {
+            const message = document.getElementById('message').value;
+    
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message }) // ✅ Changed 'email' to 'message'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediction) {
+                    document.getElementById('result').innerText = "Prediction: " + data.prediction;
+                } else if (data.error) {
+                    document.getElementById('result').innerText = "Error: " + data.error;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "An error occurred while predicting.";
+            });
+        }
+    </script>
+    
+  </body>
+  </html>
