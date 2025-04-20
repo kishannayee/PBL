@@ -1,6 +1,7 @@
+import os
 import joblib
-from flask import Flask, render_template, request, jsonify
 import pickle
+from flask import Flask, render_template, request, jsonify
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -73,4 +74,6 @@ def predict():
 
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Get the port from the environment variable (Render provides this)
+    port = int(os.environ.get("PORT", 5000))  # Default to 5000 if not set
+    app.run(host="0.0.0.0", port=port, debug=True)  # Bind to all available interfaces
